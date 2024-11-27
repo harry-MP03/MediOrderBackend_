@@ -1,9 +1,8 @@
 from django.urls import path
 from .views import BebidasApiView
 
-app_name = "Bebidas"
 urlpatterns = [
 
-    path("", BebidasApiView.as_view(), name="Bebidas"),
+    path("", BebidasApiView.as_view()), #Listar o crear Bebidas
 
 ]

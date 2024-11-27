@@ -8,11 +8,11 @@ class systemAdmin(models.Model):
     lastNameAdmin = models.CharField(verbose_name='Apellidos del encargado', max_length=60)
     phoneAdmin = models.CharField(verbose_name='Teléfono del encargado', max_length=15)
     Username = models.CharField(verbose_name='Nombre de Usuario', max_length=15)
-    password = models.CharField(verbose_name='Contraseña', max_length=15)
+    Password_admin = models.CharField(verbose_name='<PASSWORD>', max_length=15, default=None)
 
     class Meta:
         verbose_name_plural = 'Encargados'
 
     def __str__(self):
         return (f"{self.idAdmin} - {self.namesAdmin} - {self.lastNameAdmin} - {self.phoneAdmin} "
-                f"- {self.Username} - {self.password}")
+                f"- {self.Username}")
