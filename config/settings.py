@@ -28,9 +28,9 @@ from datetime import timedelta
 SECRET_KEY = 'django-insecure-_f(&%@grcg!b9#96ol!&6tt2t$%0r9hldb2e9@(q^ebd7k&bvz'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+#DEBUG = True
 
-ALLOWED_HOSTS = []
+#ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -88,11 +88,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 #    }
 #}
 
+''''
 DATABASES = {
     'default': {
         'ENGINE': 'mssql',  # Utilizamos el backend mssql-django
-        'NAME': 'MediOrder_DB',  # Nombre de la base de datos
-        'HOST': 'DESKTOP-K4DGVKC',  # IP del servidor SQL Server
+        'NAME': '',  # Nombre de la base de datos
+        'HOST': '',  # IP del servidor SQL Server
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',  # Driver ODBC instalado
             'trusted_connection': 'yes',  # Habilita la autenticación de Windows
@@ -100,7 +101,7 @@ DATABASES = {
         },
     }
 }
-
+'''''
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -123,9 +124,9 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
-#    'DEFAULT_PERMISSION_CLASSES': (
-#       'rest_framework.permissions.IsAuthenticated',
-#    ),
+        'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
 }
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
