@@ -28,7 +28,7 @@ class Expediente_Paciente(PaginationMixin, APIView):
         Obtener todos los expedientes e información sobre las enfermedades y condición de los pacientes
         """
 
-        logger.info("GET request to list all Beverages")
+        logger.info("GET request to list all Expedients")
         expediente = expedientPatient.objects.all().order_by('idExpedient')
         page = self.paginate_queryset(expediente, request)
 
@@ -40,3 +40,18 @@ class Expediente_Paciente(PaginationMixin, APIView):
         serializer = ExpedienteSerializer(expediente, many=True)
         logger.error("Returning all expedients without pagination")
         return Response(serializer.data)
+
+    @swagger_auto_schema(request_body=ExpedienteSerializer, responses={201: ExpedienteSerializer(many=True)})
+    def post(self, request):
+        """""
+        Ingresar un Expediente nuevo
+        """
+        logger.info("POST request to create a new Expedient")
+        serializer = ExpedienteSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            logger.info("Expedient created successfully")
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        logger.error("Failed to create Expedient: %s", serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -16,8 +16,8 @@ class ExpedienteSerializer(ModelSerializer):
     nombre_paciente = CharField(source='patientFK.namesPatient', label='Nombre del paciente' ,read_only=True)
     apellido_paciente = CharField(source='patientFK.lastnamePatient', label='Apellido del paciente' ,read_only=True)
     condicionDel_Paciente = CharField(source='conditionFK.ConditionName', label='Condicion del paciente' ,read_only=True)
-    enfermedades_detalles = Enfermedades_ParaExpedienteSerializer(many=True)
+    enfermedades_detalles = Enfermedades_ParaExpedienteSerializer(many=True, read_only=True, label='Enfermedad')
 
     class Meta:
         model = expedientPatient
-        fields = ['codeExpedient', 'nombre_paciente', 'apellido_paciente', 'condicionDel_Paciente', 'enfermedades_detalles', 'reasonConsult', 'diagnosis', 'treatment', 'dietaryRestrictions', 'dietaryPreferences', 'attedingPhysician']
+        fields = ['codeExpedient', 'patientFK','nombre_paciente', 'apellido_paciente', 'conditionFK','condicionDel_Paciente', 'detailDiseaseFK','enfermedades_detalles', 'reasonConsult', 'diagnosis', 'treatment', 'dietaryRestrictions', 'dietaryPreferences', 'attedingPhysician']
