@@ -8,8 +8,8 @@ from Apps.Operaciones.PedidoPaciente.models import orderpatient
 class medical_History(models.Model):
     idMedicalHistory = models.AutoField(primary_key=True)
     expedientP_FK = models.ForeignKey(expedientPatient, verbose_name='Expediente del paciente', on_delete=models.PROTECT)
-    bedFK = models.ForeignKey(beds, verbose_name='Cama del paciente', on_delete=models.PROTECT)
-    orderFk = models.ForeignKey(orderpatient, verbose_name= 'Pedido del Paciente', on_delete=models.PROTECT)
+    bedFK = models.ForeignKey(beds, verbose_name='Cama del paciente', on_delete=models.PROTECT, related_name='historiales_medicos')
+    orderFk = models.ForeignKey(orderpatient, verbose_name= 'Pedido del Paciente', on_delete=models.PROTECT, null = True)
     codeHistory = models.CharField(verbose_name='Código de historial', max_length=10, unique=True)
     dateHistory = models.DateField(verbose_name='Fecha del historial', auto_now=True)
     active_Patient = models.BooleanField(default=True)

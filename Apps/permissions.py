@@ -23,8 +23,20 @@ class CustomPermission(BasePermission):
             model = getattr(view, 'model', None)
             if model is None:
                 raise AttributeError("No se puede obtener el modelo para verificar los permisos.")
+        #Si el modelo es una tupla, hay que iterar sobre cada uno de esos modelos
+        if isinstance(model, tuple):
+            for m in model:
 
-        # Para operaciones de lista (GET) y creación (POST)
+                # Para operaciones de lista (GET) y creación (POST)
+                if request.method == 'GET':
+                     if not request.user.has_perm(f'{m._meta.app_label}.view_{m._meta.model_name}'):
+                        return False
+                if request.method == 'POST':
+                    if not request.user.has_perm(f'{m._meta.app_label}.add_{m._meta.model_name}'):
+                        return False
+            return True #Permitir el acceso si tiene los permisos para todos los modelos
+
+        #si en caso el modelo no es una tupla, se continúa la lógica
         if request.method == 'GET':
             return request.user.has_perm(f'{model._meta.app_label}.view_{model._meta.model_name}')
         if request.method == 'POST':
