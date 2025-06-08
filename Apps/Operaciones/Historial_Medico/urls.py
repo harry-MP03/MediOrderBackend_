@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .views import HistorialMedico_SoloActivosApiView, HistorialMedico_NoActivosApiView, ConteoActivosAPIView, \
-    ConteoNoActivosAPIView, CamasDisponiblesAPIView, Listado_CamasDisponiblesAPIView
+    ConteoNoActivosAPIView, CamasDisponiblesAPIView, Listado_CamasDisponiblesAPIView, PatientActiveApiView
 
 urlpatterns = [
 
@@ -11,4 +11,6 @@ urlpatterns = [
     path("Cantidad-NoActivos", ConteoNoActivosAPIView.as_view()),  # Obtener la cantidad total de no activos
     path("Cantidad-CamasDisponibles", CamasDisponiblesAPIView.as_view()),  # Obtener la cantidad total de camas disponibles
     path("Listado-CamasDisponibles", Listado_CamasDisponiblesAPIView.as_view()), #Obtener el listado de las camas disponibles
+    path("Paciente-Activo", PatientActiveApiView.as_view()), #Listado de pacientes si son activos o no
+
 ]

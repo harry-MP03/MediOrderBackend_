@@ -7,6 +7,10 @@ from .models import patient
 from .serializers import PatientSerializer
 from drf_yasg.utils import swagger_auto_schema
 
+#Serializador de los pacientes activos
+from Apps.Operaciones.Historial_Medico.models import medical_History
+from Apps.Operaciones.Historial_Medico.serializers import PacienteActivoSerializer
+
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 

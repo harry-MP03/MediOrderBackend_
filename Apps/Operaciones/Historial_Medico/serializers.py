@@ -1,7 +1,9 @@
 from rest_framework.serializers import ModelSerializer, CharField
 
-from Apps.Catalogos.Paciente.models import patient
 from Apps.Operaciones.Historial_Medico.models import medical_History
+
+#Traer el serializador del expediente como puente para traer al paciente
+from Apps.Operaciones.ExpedientePaciente.serializers import ExpedientPuentePacienteSerializer
 
 
 class MedicalHistorySerializer(ModelSerializer):
@@ -13,7 +15,10 @@ class MedicalHistorySerializer(ModelSerializer):
         model = medical_History
         fields = ['codeHistory', 'expedientP_FK', 'expediente_code', 'bedFK', 'codigo_cama', 'orderFk', 'codigo_Pedido', 'dateHistory', 'active_Patient']
 
+
+#Serializador para traer el expediente como puente para traer a la información del paciente
 class PacienteActivoSerializer(ModelSerializer):
+    paciente = ExpedientPuentePacienteSerializer(source='expedientP_FK', read_only=True)
     class Meta:
         model = medical_History
-        fields = ['active_Patient']
+        fields = ['paciente', 'active_Patient']

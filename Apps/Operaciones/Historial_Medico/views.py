@@ -11,7 +11,7 @@ from Apps.Catalogos.Camas.models import beds
 from drf_yasg.utils import swagger_auto_schema
 
 #Serializer de Historial Médico y Camas
-from .serializers import MedicalHistorySerializer
+from .serializers import MedicalHistorySerializer, PacienteActivoSerializer
 from Apps.Catalogos.Camas.serializers import BedSerializer
 
 from django.shortcuts import get_object_or_404
@@ -141,4 +141,29 @@ class Listado_CamasDisponiblesAPIView(APIView):
 
         serializer = BedSerializer(CamasDispobles_, many=True)
 
+        return Response(serializer.data)
+
+#ApiView del paciente si es activo o no
+class PatientActiveApiView(PaginationMixin, APIView):
+
+    #permission_classes = [IsAuthenticated, CustomPermission]
+    model = medical_History
+
+    @swagger_auto_schema(responses={200: PacienteActivoSerializer(many=True)})
+    def get(self, request):
+        """""
+        Obtener todos los Historiales donde solo se muestren a pacientes activos
+        """
+
+        logger.info("GET request to list all Medical history")
+        pacientes_activos = medical_History.objects.all().order_by('idMedicalHistory')
+        page = self.paginate_queryset(pacientes_activos, request)
+
+        if page is not None:
+            serializer = PacienteActivoSerializer(page, many=True)
+            logger.info("Paginated response for Medical History")
+            return self.get_paginated_response(serializer.data)
+
+        serializer = PacienteActivoSerializer(pacientes_activos, many=True)
+        logger.error("Returning all Medical History without pagination")
         return Response(serializer.data)

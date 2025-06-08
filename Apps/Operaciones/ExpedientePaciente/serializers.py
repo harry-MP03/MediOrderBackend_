@@ -4,13 +4,8 @@ from .models import expedientPatient
 from Apps.Catalogos.Enfermedades.models import diseases
 from Apps.Operaciones.DetallesEnfermedad.serializers import DetailsDiseaseForExpedienteSerializer
 
-
-class Enfermedades_ParaExpedienteSerializer(ModelSerializer):
-    nombreTipo_Enfermedad = CharField(source='typeDiseaseFK.nametype', label='Nombre de tipo de enfermedad',read_only=True)
-
-    class Meta:
-        model = diseases
-        fields = ['nameDisease', 'nombreTipo_Enfermedad']
+#Traer el serializador del paciente
+from Apps.Catalogos.Paciente.serializers import PatientSerializer
 
 class ExpedienteSerializer(ModelSerializer):
     nombre_paciente = CharField(source='patientFK.namesPatient', label='Nombre del paciente' ,read_only=True)
@@ -21,3 +16,10 @@ class ExpedienteSerializer(ModelSerializer):
     class Meta:
         model = expedientPatient
         fields = ['codeExpedient', 'patientFK','nombre_paciente', 'apellido_paciente', 'conditionFK','condicionDel_Paciente', 'detailDiseaseFK','enfermedades_detalles', 'reasonConsult', 'diagnosis', 'treatment', 'dietaryRestrictions', 'dietaryPreferences', 'attedingPhysician']
+
+class ExpedientPuentePacienteSerializer(ModelSerializer):
+    info_Paciente_Basic = PatientSerializer(source='patientFK', read_only=True, label='Info de Paciente')
+
+    class Meta:
+        model = expedientPatient
+        fields = ['info_Paciente_Basic']
