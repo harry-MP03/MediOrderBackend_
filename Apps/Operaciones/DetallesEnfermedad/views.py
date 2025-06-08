@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 #Sacar el promedio de las enfermedades diagnosticadas en el registro de los detalles de enfermedad
 class EnfermedadPromedio_PatientsAPIview(PaginationMixin, APIView):
 
-    permission_classes = [IsAuthenticated, CustomPermission]
+    #permission_classes = [IsAuthenticated, CustomPermission]
     model = detailDisease
 
     def get(self, request):

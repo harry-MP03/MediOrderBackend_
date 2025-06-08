@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 class PatientApiView(PaginationMixin, APIView):
 
-    permission_classes = [IsAuthenticated, CustomPermission]
+    #permission_classes = [IsAuthenticated, CustomPermission]
     model = patient
 
     @swagger_auto_schema(responses={200: PatientSerializer(many=True)})
@@ -60,7 +60,7 @@ class PatientApiView(PaginationMixin, APIView):
 
 class Patient_PPPD_ApiView(APIView):
 
-    permission_classes = (IsAuthenticated,CustomPermission)
+    #permission_classes = (IsAuthenticated,CustomPermission)
     model = patient
     @swagger_auto_schema(request_body=PatientSerializer, responses={200: PatientSerializer(many=True)})
     def put(self, request, pk):
@@ -118,7 +118,7 @@ class Patient_PPPD_ApiView(APIView):
 #Se lista los pacientes en orden por edad de mayor a menor en descenso
 class Paciente_Edad_DescensoApiView(PaginationMixin, APIView):
 
-    permission_classes = [IsAuthenticated, CustomPermission]
+    #permission_classes = [IsAuthenticated, CustomPermission]
     model = patient
 
     @swagger_auto_schema(responses={200: PatientSerializer(many=True)})
@@ -143,7 +143,7 @@ class Paciente_Edad_DescensoApiView(PaginationMixin, APIView):
 #Sacar el promedio de edad de los pacientes registrados
 class EdadPromedio_PatientsAPIview(PaginationMixin, APIView):
 
-    permission_classes = [IsAuthenticated, CustomPermission]
+    #permission_classes = [IsAuthenticated, CustomPermission]
     model = patient
 
     @swagger_auto_schema(responses={200: PatientSerializer(many=True)})
@@ -164,7 +164,7 @@ class EdadPromedio_PatientsAPIview(PaginationMixin, APIView):
 
 #Contar los pacientes registrados
 class PatientsCountAPIview(PaginationMixin, APIView):
-    permission_classes = [IsAuthenticated, CustomPermission]
+   # permission_classes = [IsAuthenticated, CustomPermission]
     model = patient
 
     @swagger_auto_schema(responses={200: PatientSerializer(many=True)})

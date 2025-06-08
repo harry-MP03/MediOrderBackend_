@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 #Listado de historiales médicos solo activos
 class HistorialMedico_SoloActivosApiView(PaginationMixin, APIView):
 
-    permission_classes = [IsAuthenticated, CustomPermission]
+    #permission_classes = [IsAuthenticated, CustomPermission]
     model = medical_History
 
     @swagger_auto_schema(responses={200: MedicalHistorySerializer(many=True)})
@@ -53,7 +53,7 @@ class HistorialMedico_SoloActivosApiView(PaginationMixin, APIView):
 #Listado de historiales médicos no activos
 class HistorialMedico_NoActivosApiView(PaginationMixin, APIView):
 
-    permission_classes = [IsAuthenticated, CustomPermission]
+    #permission_classes = [IsAuthenticated, CustomPermission]
     model = medical_History
 
     @swagger_auto_schema(responses={200: MedicalHistorySerializer(many=True)})
@@ -76,7 +76,7 @@ class HistorialMedico_NoActivosApiView(PaginationMixin, APIView):
         return Response(serializer.data)
 
 class ConteoActivosAPIView(APIView):
-    permission_classes = [IsAuthenticated, CustomPermission]
+    #permission_classes = [IsAuthenticated, CustomPermission]
     model = medical_History
 
     @swagger_auto_schema(responses={200: MedicalHistorySerializer(many=True)})
@@ -90,7 +90,7 @@ class ConteoActivosAPIView(APIView):
         return Response({'Cantidad Total de activos': CantidadActivo})
 
 class ConteoNoActivosAPIView(APIView):
-    permission_classes = [IsAuthenticated, CustomPermission]
+    #permission_classes = [IsAuthenticated, CustomPermission]
     model = medical_History
 
     @swagger_auto_schema(responses={200: MedicalHistorySerializer(many=True)})
@@ -104,7 +104,7 @@ class ConteoNoActivosAPIView(APIView):
         return Response({'Cantidad Total de no Activos': CantidadNoActivo})
 
 class CamasDisponiblesAPIView(APIView):
-    permission_classes = [IsAuthenticated, CustomPermission]
+    #permission_classes = [IsAuthenticated, CustomPermission]
     model = medical_History
 
     @swagger_auto_schema(responses={200: MedicalHistorySerializer(many=True)})
@@ -125,7 +125,7 @@ class CamasDisponiblesAPIView(APIView):
         })
 
 class Listado_CamasDisponiblesAPIView(APIView):
-    permission_classes = [IsAuthenticated, CustomPermission]
+    #permission_classes = [IsAuthenticated, CustomPermission]
     model = medical_History, beds
 
     @swagger_auto_schema(responses={200: MedicalHistorySerializer(many=True)})

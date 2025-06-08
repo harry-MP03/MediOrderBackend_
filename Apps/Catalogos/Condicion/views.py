@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 class ConditionLvl_ApiView(PaginationMixin, APIView):
 
-    permission_classes = [IsAuthenticated, CustomPermission]
+    #permission_classes = [IsAuthenticated, CustomPermission]
     model = condition_lvl
 
     @swagger_auto_schema(responses={200: ConditionSerializer(many=True)})
@@ -58,7 +58,7 @@ class ConditionLvl_ApiView(PaginationMixin, APIView):
 
 class Condition_PPPD_ApiView(APIView):
 
-    permission_classes = (IsAuthenticated,CustomPermission)
+    #permission_classes = (IsAuthenticated,CustomPermission)
     model = condition_lvl
     @swagger_auto_schema(request_body=ConditionSerializer, responses={200: ConditionSerializer(many=True)})
     def put(self, request, pk):

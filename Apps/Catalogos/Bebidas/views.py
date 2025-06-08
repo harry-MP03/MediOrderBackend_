@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 class BebidasApiView(PaginationMixin, APIView):
 
-    permission_classes = [IsAuthenticated, CustomPermission]
+    #permission_classes = [IsAuthenticated, CustomPermission]
     model = beverages
 
     @swagger_auto_schema(responses={200: BeverageSerializer(many=True)})
@@ -59,7 +59,7 @@ class BebidasApiView(PaginationMixin, APIView):
 
 class bebidas_PPPD_ApiView(APIView):
 
-    permission_classes = (IsAuthenticated,CustomPermission)
+    #permission_classes = (IsAuthenticated,CustomPermission)
     model = beverages
     @swagger_auto_schema(request_body=BeverageSerializer, responses={200: BeverageSerializer(many=True)})
     def put(self, request, pk):

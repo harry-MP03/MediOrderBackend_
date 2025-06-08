@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 class Expediente_Paciente(PaginationMixin, APIView):
 
-    permission_classes = [IsAuthenticated, CustomPermission]
+    #permission_classes = [IsAuthenticated, CustomPermission]
     model = expedientPatient
 
     @swagger_auto_schema(responses={200: ExpedienteSerializer(many=True)})

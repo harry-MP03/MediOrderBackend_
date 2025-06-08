@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 class TypeDisease_ApiView(PaginationMixin, APIView):
 
-    permission_classes = [IsAuthenticated, CustomPermission]
+    #permission_classes = [IsAuthenticated, CustomPermission]
     model = Typedisease
 
     @swagger_auto_schema(responses={200: TypediseaseSerializer(many=True)})
@@ -58,7 +58,7 @@ class TypeDisease_ApiView(PaginationMixin, APIView):
 
 class TypeDisease_PPPD_ApiView(APIView):
 
-    permission_classes = (IsAuthenticated,CustomPermission)
+    #permission_classes = (IsAuthenticated,CustomPermission)
     model = Typedisease
     @swagger_auto_schema(request_body=TypediseaseSerializer, responses={200: TypediseaseSerializer(many=True)})
     def put(self, request, pk):
