@@ -1,5 +1,6 @@
 from rest_framework.serializers import ModelSerializer, CharField
 
+from Apps.Catalogos.Enfermedades.serializers import DiseasesForExpSerializer
 from .models import detailDisease
 
 class DetailDiseaseSerializer(ModelSerializer):
@@ -11,3 +12,10 @@ class DetailDiseaseSerializer(ModelSerializer):
     class Meta:
         model = detailDisease
         fields = ['nombreEnfermedad', 'nombrePaciente', 'apellidoPaciente', 'cedulaPaciente']
+
+class DetailsDiseaseForExpedienteSerializer(ModelSerializer):
+    info_Enfermedades = DiseasesForExpSerializer(source = 'diseaseFK', read_only=True)
+
+    class Meta:
+        model = detailDisease
+        fields = ['info_Enfermedades']

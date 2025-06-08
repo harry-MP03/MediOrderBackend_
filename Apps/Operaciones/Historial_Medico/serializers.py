@@ -1,5 +1,6 @@
 from rest_framework.serializers import ModelSerializer, CharField
 
+from Apps.Catalogos.Paciente.models import patient
 from Apps.Operaciones.Historial_Medico.models import medical_History
 
 
@@ -11,3 +12,8 @@ class MedicalHistorySerializer(ModelSerializer):
     class Meta:
         model = medical_History
         fields = ['codeHistory', 'expedientP_FK', 'expediente_code', 'bedFK', 'codigo_cama', 'orderFk', 'codigo_Pedido', 'dateHistory', 'active_Patient']
+
+class PacienteActivoSerializer(ModelSerializer):
+    class Meta:
+        model = medical_History
+        fields = ['active_Patient']

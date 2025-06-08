@@ -8,3 +8,10 @@ class DiseasesSerializer(ModelSerializer):
     class Meta:
         model = diseases
         fields = ['nameDisease', 'typeDiseaseFK','tipoEnfermedad_Descripcion']
+
+class DiseasesForExpSerializer(ModelSerializer):
+    tipoEnfermedad_Descripcion1 = CharField(source='typeDiseaseFK.nametype', read_only=True, label='Tipo de Enfermedad')
+
+    class Meta:
+        model = diseases
+        fields = ['nameDisease', 'tipoEnfermedad_Descripcion1']

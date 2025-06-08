@@ -2,7 +2,7 @@ from rest_framework.serializers import ModelSerializer, CharField
 
 from .models import expedientPatient
 from Apps.Catalogos.Enfermedades.models import diseases
-from ...Catalogos import Enfermedades
+from Apps.Operaciones.DetallesEnfermedad.serializers import DetailsDiseaseForExpedienteSerializer
 
 
 class Enfermedades_ParaExpedienteSerializer(ModelSerializer):
@@ -16,7 +16,7 @@ class ExpedienteSerializer(ModelSerializer):
     nombre_paciente = CharField(source='patientFK.namesPatient', label='Nombre del paciente' ,read_only=True)
     apellido_paciente = CharField(source='patientFK.lastnamePatient', label='Apellido del paciente' ,read_only=True)
     condicionDel_Paciente = CharField(source='conditionFK.ConditionName', label='Condicion del paciente' ,read_only=True)
-    enfermedades_detalles = Enfermedades_ParaExpedienteSerializer(many=True, read_only=True, label='Enfermedad')
+    enfermedades_detalles = DetailsDiseaseForExpedienteSerializer(source = 'detailDiseaseFK', read_only=True, label='Enfermedades')
 
     class Meta:
         model = expedientPatient
