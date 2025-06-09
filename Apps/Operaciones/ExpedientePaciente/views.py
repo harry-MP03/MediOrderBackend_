@@ -41,6 +41,10 @@ class Expediente_Paciente(PaginationMixin, APIView):
         logger.error("Returning all expedients without pagination")
         return Response(serializer.data)
 
+class Expediente_PPPD_ApiView(PaginationMixin, APIView):
+    # permission_classes = (IsAuthenticated,CustomPermission)
+    model = expedientPatient
+
     @swagger_auto_schema(request_body=ExpedienteSerializer, responses={201: ExpedienteSerializer(many=True)})
     def post(self, request):
         """""
@@ -55,3 +59,56 @@ class Expediente_Paciente(PaginationMixin, APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         logger.error("Failed to create Expedient: %s", serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @swagger_auto_schema(request_body=ExpedienteSerializer, responses={200: ExpedienteSerializer(many=True)})
+    def put(self, request, pk):
+        """
+        Actualizar totalmente un Expediente especificando su ID
+        """
+        logger.info("PUT request to update Expedient  with ID: %s", pk)
+        expediente = get_object_or_404(expedientPatient, idExpedient=pk)
+        if not expediente:
+            return Response({'error': 'Expediente no encontrada'}, status=status.HTTP_404_NOT_FOUND)
+
+        self.check_object_permissions(request, expedientPatient)  # Verificación de permisos
+        serializer = ExpedienteSerializer(expediente, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            logger.info("Expedient updated successfully with ID: %s", pk)
+            return Response(serializer.data)
+        logger.error("Failed to update Expedient with ID: %s. Errors: %s", pk, serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @swagger_auto_schema(request_body=ExpedienteSerializer, responses={200: ExpedienteSerializer(many=True)})
+    def patch(self, request, pk):
+        """
+        Actualizar parcialmente un Expediente por su ID.
+        """
+        logger.info("PATCH request to partially update Expedient with ID: %s", pk)
+        expediente = get_object_or_404(expedientPatient, idExpedient=pk)
+        if not expediente:
+            return Response({'error': 'Expediente no encontrada'}, status=status.HTTP_404_NOT_FOUND)
+
+        self.check_object_permissions(request, expediente)  # Verificación de permisos
+        serializer = ExpedienteSerializer(expediente, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            logger.info("Expedient partially updated successfully with ID: %s", pk)
+            return Response(serializer.data)
+        logger.error("Failed to partially update Expedient with ID: %s. Errors: %s", pk, serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @swagger_auto_schema(responses={204: 'No Content'})
+    def delete(self, request, pk):
+        """
+        Eliminar un Expediente por su ID.
+        """
+        logger.info("DELETE request to delete Expedient with ID: %s", pk)
+        expediente = get_object_or_404(expedientPatient, idExpedient=pk)
+        if not expediente:
+            return Response({'error': 'Expediente no encontrada'}, status=status.HTTP_404_NOT_FOUND)
+
+        self.check_object_permissions(request, expediente)  # Verificación de permisos
+        expediente.delete()
+        logger.info("Expedient deleted successfully with ID: %s", pk)
+        return Response(status=status.HTTP_204_NO_CONTENT)

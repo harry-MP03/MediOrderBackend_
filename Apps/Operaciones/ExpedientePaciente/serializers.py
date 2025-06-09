@@ -15,7 +15,7 @@ class ExpedienteSerializer(ModelSerializer):
 
     class Meta:
         model = expedientPatient
-        fields = ['codeExpedient', 'patientFK','nombre_paciente', 'apellido_paciente', 'conditionFK','condicionDel_Paciente', 'detailDiseaseFK','enfermedades_detalles', 'reasonConsult', 'diagnosis', 'treatment', 'dietaryRestrictions', 'dietaryPreferences', 'attedingPhysician']
+        fields = ['idExpedient', 'codeExpedient', 'patientFK','nombre_paciente', 'apellido_paciente', 'conditionFK','condicionDel_Paciente', 'detailDiseaseFK','enfermedades_detalles', 'reasonConsult', 'diagnosis', 'treatment', 'dietaryRestrictions', 'dietaryPreferences', 'attedingPhysician']
 
 class ExpedientPuentePacienteSerializer(ModelSerializer):
     info_Paciente_Basic = PatientSerializer(source='patientFK', read_only=True, label='Info de Paciente')

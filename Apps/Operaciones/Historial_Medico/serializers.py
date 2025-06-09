@@ -13,7 +13,7 @@ class MedicalHistorySerializer(ModelSerializer):
 
     class Meta:
         model = medical_History
-        fields = ['codeHistory', 'expedientP_FK', 'expediente_code', 'bedFK', 'codigo_cama', 'orderFk', 'codigo_Pedido', 'dateHistory', 'active_Patient']
+        fields = ['idMedicalHistory', 'codeHistory', 'expedientP_FK', 'expediente_code', 'bedFK', 'codigo_cama', 'orderFk', 'codigo_Pedido', 'dateHistory', 'active_Patient']
 
 
 #Serializador para traer el expediente como puente para traer a la información del paciente

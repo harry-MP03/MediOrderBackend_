@@ -56,7 +56,7 @@ class ConditionLvl_ApiView(PaginationMixin, APIView):
         logger.error("Failed to create Condition: %s", serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class Condition_PPPD_ApiView(APIView):
+class Condition_PPPD_ApiView(PaginationMixin, APIView):
 
     #permission_classes = (IsAuthenticated,CustomPermission)
     model = condition_lvl
@@ -68,7 +68,7 @@ class Condition_PPPD_ApiView(APIView):
         logger.info("PUT request to update Condition with ID: %s", pk)
         condicion = get_object_or_404(condition_lvl, idcondition_lvl=pk)
         if not condicion:
-            return Response({'error': 'oondicion no encontrada'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': 'condicion no encontrada'}, status=status.HTTP_404_NOT_FOUND)
 
         self.check_object_permissions(request, condicion)  # Verificación de permisos
         serializer = ConditionSerializer(condicion, data=request.data)
@@ -103,7 +103,7 @@ class Condition_PPPD_ApiView(APIView):
         """
         Eliminar una condición por su ID.
         """
-        logger.info("DELETE request to delete departamento with ID: %s", pk)
+        logger.info("DELETE request to delete condition with ID: %s", pk)
         condicion = get_object_or_404(condition_lvl, idcondition_lvl=pk)
         if not condicion:
             return Response({'error': 'condición no encontrada'}, status=status.HTTP_404_NOT_FOUND)

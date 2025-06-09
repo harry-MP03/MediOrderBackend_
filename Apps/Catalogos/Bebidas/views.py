@@ -42,6 +42,11 @@ class BebidasApiView(PaginationMixin, APIView):
         logger.error("Returning all beverages without pagination")
         return Response(serializer.data)
 
+class bebidas_PPPD_ApiView(APIView):
+
+    #permission_classes = (IsAuthenticated,CustomPermission)
+    model = beverages
+
     @swagger_auto_schema(request_body=BeverageSerializer, responses={201: BeverageSerializer(many=True)})
     def post(self, request):
         """""
@@ -57,10 +62,6 @@ class BebidasApiView(PaginationMixin, APIView):
         logger.error("Failed to create beverage: %s", serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class bebidas_PPPD_ApiView(APIView):
-
-    #permission_classes = (IsAuthenticated,CustomPermission)
-    model = beverages
     @swagger_auto_schema(request_body=BeverageSerializer, responses={200: BeverageSerializer(many=True)})
     def put(self, request, pk):
         """

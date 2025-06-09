@@ -5,4 +5,4 @@ from .models import Typedisease
 class TypediseaseSerializer(ModelSerializer):
     class Meta:
         model = Typedisease
-        fields = ['nametype']
+        fields = ['idtype', 'nametype']
