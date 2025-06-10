@@ -19,6 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 from Apps.Catalogos.setting_apps import Catalogos_Settings_Apps
 from Apps.Operaciones.setting_apps import Operaciones_Settings_Apps
 from Apps.Seguridad.setting_apps import Seguridad_Settings_Apps
+from Apps.Dashboard.setting_apps import Dashboard_Settings_Apps
 from datetime import timedelta
 
 # Quick-start development settings - unsuitable for production
@@ -45,7 +46,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'rest_framework_simplejwt',
-] + Seguridad_Settings_Apps + Catalogos_Settings_Apps + Operaciones_Settings_Apps
+] + Seguridad_Settings_Apps + Catalogos_Settings_Apps + Operaciones_Settings_Apps + Dashboard_Settings_Apps
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
