@@ -23,3 +23,10 @@ class ExpedientPuentePacienteSerializer(ModelSerializer):
     class Meta:
         model = expedientPatient
         fields = ['info_Paciente_Basic']
+
+class ExpedienteWriteSerializer(ModelSerializer):
+    class Meta:
+        model = expedientPatient
+        fields = ['codeExpedient', 'patientFK', 'conditionFK', 'detailDiseaseFK', 'reasonConsult',
+                  'diagnosis', 'treatment', 'dietaryRestrictions', 'dietaryPreferences',
+                  'attedingPhysician']

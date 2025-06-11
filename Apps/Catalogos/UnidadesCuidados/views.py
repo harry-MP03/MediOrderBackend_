@@ -117,7 +117,7 @@ class UnidadCuidado_PPPD_ApiView(PaginationMixin, APIView):
         logger.info("Care Unit deleted successfully with ID: %s", pk)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-class UnidadCuidadoLookupView(generics.ListAPIView): #Cambiar a ApiView si es selectivo
+class UnidadCuidadoLookupView(APIView): #Cambiar a ApiView si es selectivo o generics.ListAPIView si es por filtro
     """
     Una vista simple que devuelve TODAS las unidades de cuidado sin paginación,
     ideal para rellenar selectores o dropdowns en el frontend.
@@ -126,6 +126,15 @@ class UnidadCuidadoLookupView(generics.ListAPIView): #Cambiar a ApiView si es se
     - Búsqueda: ?search=...
     - Ordenamiento: ?ordering=...
     """
+
+    def get(self, request):
+        # Obtenemos todos los objetos, sin paginación
+        unidades = Careunit.objects.all().order_by('nameCareUnit')
+
+        serializer = CareunitSerializer(unidades, many=True)
+        return Response(serializer.data)
+
+    """""""""""
     queryset = Careunit.objects.all()
     serializer_class = CareunitSerializer
     pagination_class = None  # Nos aseguramos de que no haya paginación
@@ -137,12 +146,11 @@ class UnidadCuidadoLookupView(generics.ListAPIView): #Cambiar a ApiView si es se
     # --- NUEVA CONFIGURACIÓN DE ORDENAMIENTO ---
     ordering_fields = ['idCareunit', 'nameCareUnit']  # Campos por los que permitimos ordenar
     ordering = ['nameCareUnit']  # <-- Ordenamiento por defecto (alfabético)
-
     """""""""""
+
     def get(self, request):
         # Obtenemos todos los objetos, sin paginación
         unidades = Careunit.objects.all().order_by('nameCareUnit')
 
         serializer = CareunitSerializer(unidades, many=True)
         return Response(serializer.data)
-    """""""""""

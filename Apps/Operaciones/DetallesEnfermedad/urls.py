@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import EnfermedadPromedio_PatientsAPIview, DetailsDiseaseApiView, DetalleEnfermedad_PPPD_ApiView
+from .views import (EnfermedadPromedio_PatientsAPIview, DetailsDiseaseApiView,
+                    DetalleEnfermedad_PPPD_ApiView, DetailDiseaseLookupApiView)
 
 urlpatterns =\
 [
@@ -7,4 +8,5 @@ urlpatterns =\
     path("", DetailsDiseaseApiView.as_view()), #Listar Detalles enfermedades
     path("", DetailsDiseaseApiView.as_view()),  # Listar Detalles enfermedades
     path('<int:pk>', DetalleEnfermedad_PPPD_ApiView.as_view()),  # POST, PATCH, PUT Y DELETE para los Detalles Enfermedades
+    path("lookup/", DetailDiseaseLookupApiView.as_view()),
 ]

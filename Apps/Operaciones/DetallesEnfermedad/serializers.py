@@ -19,3 +19,8 @@ class DetailsDiseaseForExpedienteSerializer(ModelSerializer):
     class Meta:
         model = detailDisease
         fields = ['info_Enfermedades']
+
+class DetailDiseaseLookupSerializer(ModelSerializer):
+    class Meta:
+        model = detailDisease
+        fields = ['idDetailDisease']

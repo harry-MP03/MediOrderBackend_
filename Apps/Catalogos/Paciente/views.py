@@ -1,10 +1,11 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import generics, filters
 
 from config.utils.Pagination import PaginationMixin
 from .models import patient
-from .serializers import PatientSerializer
+from .serializers import PatientSerializer, PacientesLookupsSerializers
 from drf_yasg.utils import swagger_auto_schema
 
 from django.shortcuts import get_object_or_404
@@ -176,3 +177,16 @@ class PatientsCountAPIview(PaginationMixin, APIView):
         logger.info("GET request to Patient Count")
         CantidadTotal = patient.objects.count()
         return Response({'CantidadTotal': CantidadTotal})
+
+class PacienteLookupsApiView(generics.ListAPIView):
+    queryset = patient.objects.all()
+    serializer_class = PacientesLookupsSerializers
+    pagination_class = None  # Nos aseguramos de que no haya paginación
+
+    # --- LÍNEAS CLAVE PARA LA BÚSQUEDA ---
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['cedulaPatient']
+
+    # --- NUEVA CONFIGURACIÓN DE ORDENAMIENTO ---
+    ordering_fields = ['idpatient', 'cedulaPatient']  # Campos por los que permitimos ordenar
+    ordering = ['cedulaPatient']  # <-- Ordenamiento por defecto (alfabético)

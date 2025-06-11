@@ -112,3 +112,11 @@ class Condition_PPPD_ApiView(PaginationMixin, APIView):
         condicion.delete()
         logger.info("Condition deleted successfully with ID: %s", pk)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class condicionSelectivoApiView(APIView):
+    def get(self, request):
+        # Obtenemos todos los objetos, sin paginación
+        condiciones = condition_lvl.objects.all().order_by('ConditionName')
+
+        serializer = ConditionSerializer(condiciones, many=True)
+        return Response(serializer.data)

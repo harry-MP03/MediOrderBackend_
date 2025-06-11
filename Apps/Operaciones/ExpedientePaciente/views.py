@@ -1,10 +1,11 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import generics, filters
 
 from config.utils.Pagination import PaginationMixin
 from .models import expedientPatient
-from .serializers import ExpedienteSerializer
+from .serializers import ExpedienteSerializer, ExpedienteWriteSerializer
 from drf_yasg.utils import swagger_auto_schema
 
 from django.shortcuts import get_object_or_404
@@ -41,24 +42,25 @@ class Expediente_Paciente(PaginationMixin, APIView):
         logger.error("Returning all expedients without pagination")
         return Response(serializer.data)
 
-class Expediente_PPPD_ApiView(PaginationMixin, APIView):
-    # permission_classes = (IsAuthenticated,CustomPermission)
-    model = expedientPatient
-
     @swagger_auto_schema(request_body=ExpedienteSerializer, responses={201: ExpedienteSerializer(many=True)})
     def post(self, request):
         """""
         Ingresar un Expediente nuevo
         """
         logger.info("POST request to create a new Expedient")
-        serializer = ExpedienteSerializer(data=request.data)
+        serializer = ExpedienteWriteSerializer(data=request.data)
 
         if serializer.is_valid():
-            serializer.save()
+            nuevo_expediente = serializer.save()
             logger.info("Expedient created successfully")
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            read_serializer = ExpedienteSerializer(nuevo_expediente)
+            return Response(read_serializer.data, status=status.HTTP_201_CREATED)
         logger.error("Failed to create Expedient: %s", serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class Expediente_PPPD_ApiView(PaginationMixin, APIView):
+    # permission_classes = (IsAuthenticated,CustomPermission)
+    model = expedientPatient
 
     @swagger_auto_schema(request_body=ExpedienteSerializer, responses={200: ExpedienteSerializer(many=True)})
     def put(self, request, pk):

@@ -10,3 +10,8 @@ class PacienteDetalleEnfermedadSerializer(ModelSerializer):
     class Meta:
         model = patient
         fields = ['lastnamePatient', 'cedulaPatient']
+
+class PacientesLookupsSerializers(ModelSerializer):
+    class Meta:
+        model = patient
+        fields = ['idpatient', 'cedulaPatient']

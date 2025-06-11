@@ -1,12 +1,13 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import generics, filters
 
 from config.utils.Pagination import PaginationMixin
 from drf_yasg.utils import swagger_auto_schema
 from .models import detailDisease
 
-from .serializers import DetailDiseaseSerializer
+from .serializers import DetailDiseaseSerializer, DetailDiseaseLookupSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 
@@ -148,3 +149,15 @@ class EnfermedadPromedio_PatientsAPIview(PaginationMixin, APIView):
 
         })
 
+class DetailDiseaseLookupApiView(generics.ListAPIView):
+    queryset = detailDisease.objects.all()
+    serializer_class = DetailDiseaseLookupSerializer
+    pagination_class = None  # Nos aseguramos de que no haya paginación
+
+    # --- LÍNEAS CLAVE PARA LA BÚSQUEDA ---
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['idDetailDisease']
+
+    # --- NUEVA CONFIGURACIÓN DE ORDENAMIENTO ---
+    ordering_fields = ['idDetailDisease']  # Campos por los que permitimos ordenar
+    ordering = ['idDetailDisease']  # <-- Ordenamiento por defecto (alfabético)
