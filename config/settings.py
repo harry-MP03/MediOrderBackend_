@@ -44,18 +44,22 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'django_filters',
     'drf_yasg',
     'rest_framework_simplejwt',
+    'corsheaders',
 ] + Seguridad_Settings_Apps + Catalogos_Settings_Apps + Operaciones_Settings_Apps + Dashboard_Settings_Apps
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'config.middleware.DebugRequestMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -131,6 +135,7 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
 }
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
@@ -167,3 +172,10 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'Usuarios.User'
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:63342",  # El servidor de PyCharm que te dio el error
+    "http://127.0.0.1:63342",  # A veces es necesario añadir la IP también
+    "http://localhost:8000",   # Si usas 'python -m http.server'
+    "http://127.0.0.1:8000",   # También para el servidor de Python
+]

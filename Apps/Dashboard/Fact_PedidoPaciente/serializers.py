@@ -7,4 +7,12 @@ class ReporteUnidades2025Serializer(serializers.Serializer):
     """
     NombreUnidadCuidado = serializers.CharField()
     CantidadTotalPedidos = serializers.IntegerField()
-    Anio = serializers.IntegerField() 
+    Anio = serializers.IntegerField()
+
+class ReporteCantidadTotal_2025_2024Serializer(serializers.Serializer):
+    """
+    Cantidad total de pedidos
+    del 2025 y 2024
+    """
+    Cantidad_TotalPedidos = serializers.IntegerField()
+    Anio = serializers.IntegerField()

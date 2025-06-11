@@ -7,3 +7,9 @@ class BedSerializer(ModelSerializer):
     class Meta:
         model = beds
         fields = ['idbed' ,'bedCode', 'NombreUnidadCuidado']
+
+class BedWriteSerializer(ModelSerializer):
+    class Meta:
+        model = beds
+        # Incluye los campos que el frontend enviará para crear una cama
+        fields = ['bedCode', 'CareUnitFK']

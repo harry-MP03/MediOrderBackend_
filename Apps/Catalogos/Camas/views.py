@@ -4,11 +4,12 @@ from rest_framework import status
 
 from config.utils.Pagination import PaginationMixin
 from .models import beds
-from .serializers import BedSerializer
+from .serializers import BedSerializer, BedWriteSerializer
 from drf_yasg.utils import swagger_auto_schema
 
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
 
 from ...permissions import CustomPermission
 from config.utils.Pagination import PaginationMixin
@@ -20,6 +21,7 @@ logger = logging.getLogger(__name__)
 
 class CamasApiView(PaginationMixin, APIView):
     # permission_classes = [IsAuthenticated, CustomPermission]
+    permission_classes = [AllowAny]
     model = beds
 
     @swagger_auto_schema(responses={200: BedSerializer(many=True)})
@@ -42,25 +44,25 @@ class CamasApiView(PaginationMixin, APIView):
         logger.error("Returning all beds without pagination")
         return Response(serializer.data)
 
-
-class camas_PPPD_ApiView(APIView):
-    # permission_classes = (IsAuthenticated,CustomPermission)
-    model = beds
-
-    @swagger_auto_schema(request_body=BedSerializer, responses={201: BedSerializer(many=True)})
+    @swagger_auto_schema(request_body=BedWriteSerializer, responses={201: BedWriteSerializer(many=True)})
     def post(self, request):
         """""
         Ingresar una nueva Cama
         """
         logger.info("POST request to create a new Bed")
-        serializer = BedSerializer(data=request.data)
+        serializer = BedWriteSerializer(data=request.data)
 
         if serializer.is_valid():
-            serializer.save()
+            nueva_cama = serializer.save()
             logger.info("Bed created successfully")
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            read_serializer = BedSerializer(nueva_cama)
+            return Response(read_serializer.data, status=status.HTTP_201_CREATED)
         logger.error("Failed to create Bed: %s", serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class camas_PPPD_ApiView(APIView):
+    # permission_classes = (IsAuthenticated,CustomPermission)
+    model = beds
 
     @swagger_auto_schema(request_body=BedSerializer, responses={200: BedSerializer(many=True)})
     def put(self, request, pk):

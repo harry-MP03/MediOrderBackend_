@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import generics, filters
 
 from config.utils.Pagination import PaginationMixin
 from .models import Careunit
@@ -9,6 +10,7 @@ from drf_yasg.utils import swagger_auto_schema
 
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
 
 from ...permissions import CustomPermission
 from config.utils.Pagination import PaginationMixin
@@ -29,6 +31,7 @@ class UnidadCuidadoApiView(PaginationMixin, APIView):
         """
 
         logger.info("GET request to list all Care Unit")
+
         unidadcuidado = Careunit.objects.all().order_by('idCareunit')
         page = self.paginate_queryset(unidadcuidado, request)
 
@@ -40,11 +43,6 @@ class UnidadCuidadoApiView(PaginationMixin, APIView):
         serializer = CareunitSerializer(unidadcuidado, many=True)
         logger.error("Returning all Care Unit without pagination")
         return Response(serializer.data)
-
-
-class UnidadCuidado_PPPD_ApiView(PaginationMixin, APIView):
-    # permission_classes = (IsAuthenticated,CustomPermission)
-    model = Careunit
 
     @swagger_auto_schema(request_body=CareunitSerializer, responses={201: CareunitSerializer(many=True)})
     def post(self, request):
@@ -60,6 +58,11 @@ class UnidadCuidado_PPPD_ApiView(PaginationMixin, APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         logger.error("Failed to create Care Unit: %s", serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UnidadCuidado_PPPD_ApiView(PaginationMixin, APIView):
+    # permission_classes = (IsAuthenticated,CustomPermission)
+    model = Careunit
 
     @swagger_auto_schema(request_body=CareunitSerializer, responses={200: CareunitSerializer(many=True)})
     def put(self, request, pk):
@@ -113,3 +116,33 @@ class UnidadCuidado_PPPD_ApiView(PaginationMixin, APIView):
         unidadcuidado.delete()
         logger.info("Care Unit deleted successfully with ID: %s", pk)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class UnidadCuidadoLookupView(generics.ListAPIView): #Cambiar a ApiView si es selectivo
+    """
+    Una vista simple que devuelve TODAS las unidades de cuidado sin paginación,
+    ideal para rellenar selectores o dropdowns en el frontend.
+
+    Devuelve TODAS las unidades de cuidado y permite la búsqueda y el ordenamiento.
+    - Búsqueda: ?search=...
+    - Ordenamiento: ?ordering=...
+    """
+    queryset = Careunit.objects.all()
+    serializer_class = CareunitSerializer
+    pagination_class = None  # Nos aseguramos de que no haya paginación
+
+    # --- LÍNEAS CLAVE PARA LA BÚSQUEDA ---
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['nameCareUnit']
+
+    # --- NUEVA CONFIGURACIÓN DE ORDENAMIENTO ---
+    ordering_fields = ['idCareunit', 'nameCareUnit']  # Campos por los que permitimos ordenar
+    ordering = ['nameCareUnit']  # <-- Ordenamiento por defecto (alfabético)
+
+    """""""""""
+    def get(self, request):
+        # Obtenemos todos los objetos, sin paginación
+        unidades = Careunit.objects.all().order_by('nameCareUnit')
+
+        serializer = CareunitSerializer(unidades, many=True)
+        return Response(serializer.data)
+    """""""""""
