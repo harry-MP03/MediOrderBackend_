@@ -5,8 +5,3 @@ class SystemAdminSerializer(ModelSerializer):
     class Meta:
         model = systemAdmin
         fields = ['idAdmin', 'namesAdmin', 'lastNameAdmin', 'phoneAdmin', 'Username']
-
-class SystemAdminLookupSerializer(ModelSerializer):
-    class Meta:
-        model = systemAdmin
-        fields = ['idAdmin', 'Username']

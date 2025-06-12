@@ -1,11 +1,10 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework import generics, filters
 
 from config.utils.Pagination import PaginationMixin
 from .models import aggregates_cb
-from .serializers import AggregatesCbSerializer, AgreggatesWriteSerializer, AgreggatesLookupSerializer
+from .serializers import AggregatesCbSerializer, AgreggatesWriteSerializer
 from drf_yasg.utils import swagger_auto_schema
 
 from django.shortcuts import get_object_or_404
@@ -114,16 +113,3 @@ class AggregatesCB_PPPD_ApiView(PaginationMixin, APIView):
         Agregado.delete()
         logger.info("Agreggates deleted successfully with ID: %s", pk)
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-class AggregatesLookupView(generics.ListAPIView):
-    queryset = aggregates_cb.objects.all()
-    serializer_class = AgreggatesLookupSerializer
-    pagination_class = None  # Nos aseguramos de que no haya paginación
-
-    # --- LÍNEAS CLAVE PARA LA BÚSQUEDA ---
-    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ['codeAggregates']
-
-    # --- NUEVA CONFIGURACIÓN DE ORDENAMIENTO ---
-    ordering_fields = ['idAggregates', 'codeAggregates']  # Campos por los que permitimos ordenar
-    ordering = ['idAggregates']  # <-- Ordenamiento por defecto (alfabético)

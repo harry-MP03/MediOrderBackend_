@@ -14,8 +14,3 @@ class AgreggatesWriteSerializer(ModelSerializer):
     class Meta:
         model = aggregates_cb
         fields = ['idAggregates', 'codeAggregates', 'foodFK', 'beverageFK']
-
-class AgreggatesLookupSerializer(ModelSerializer):
-    class Meta:
-        model = aggregates_cb
-        fields = ['idAggregates', 'codeAggregates']

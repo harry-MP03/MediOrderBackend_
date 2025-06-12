@@ -4,7 +4,7 @@ from rest_framework import status
 
 from config.utils.Pagination import PaginationMixin
 from .models import orderpatient
-from .serializers import PedidoPacienteSerializer, PedidoPacienteWriteSerializer
+from .serializers import PedidoPacienteSerializer
 from drf_yasg.utils import swagger_auto_schema
 
 from django.shortcuts import get_object_or_404
@@ -36,31 +36,20 @@ class PedidoPacienteApiView(PaginationMixin, APIView):
         serializer = PedidoPacienteSerializer(pedidos, many=True)
         return Response(serializer.data)
 
-<<<<<<< HEAD
     @swagger_auto_schema(request_body=PedidoPacienteSerializer, responses={201: PedidoPacienteSerializer})
-=======
-    @swagger_auto_schema(request_body=PedidoPacienteWriteSerializer, responses={201: PedidoPacienteWriteSerializer(many=True)})
->>>>>>> 705f8255a57959c3cb631b4facda9276d37e2dd0
     def post(self, request):
         """
         Registrar un nuevo pedido
         """
         logger.info("POST request to create a new Order")
-<<<<<<< HEAD
         serializer = PedidoPacienteSerializer(data=request.data)
-=======
-        serializer = PedidoPacienteWriteSerializer(data=request.data)
-
->>>>>>> 705f8255a57959c3cb631b4facda9276d37e2dd0
         if serializer.is_valid():
-            nueva_pedido = serializer.save()
+            serializer.save()
             logger.info("Order created successfully")
-            read_serializer = PedidoPacienteSerializer(nueva_pedido)
-            return Response(read_serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         logger.error("Failed to create Order: %s", serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-<<<<<<< HEAD
 
 class PedidoPaciente_PPPD_ApiView(PaginationMixin, APIView):
     # permission_classes = [IsAuthenticated, CustomPermission]
@@ -76,13 +65,6 @@ class PedidoPaciente_PPPD_ApiView(PaginationMixin, APIView):
         return Response(serializer.data)
 
     @swagger_auto_schema(request_body=PedidoPacienteSerializer, responses={200: PedidoPacienteSerializer})
-=======
-class PedidoPaciente_PPPD_ApiView(PaginationMixin, APIView):
-    # permission_classes = (IsAuthenticated,CustomPermission)
-    model = orderpatient
-
-    @swagger_auto_schema(request_body=PedidoPacienteSerializer, responses={200: PedidoPacienteSerializer(many=True)})
->>>>>>> 705f8255a57959c3cb631b4facda9276d37e2dd0
     def put(self, request, pk):
         """
         Actualizar completamente un pedido

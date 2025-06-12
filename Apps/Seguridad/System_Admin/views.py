@@ -1,11 +1,10 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework import generics, filters
 
 from config.utils.Pagination import PaginationMixin
 from .models import systemAdmin
-from .serializers import SystemAdminSerializer, SystemAdminLookupSerializer
+from .serializers import SystemAdminSerializer
 from drf_yasg.utils import swagger_auto_schema
 
 from django.shortcuts import get_object_or_404
@@ -113,16 +112,3 @@ class SystemAdmin_PPPD_ApiView(PaginationMixin, APIView):
         sysAdmin.delete()
         logger.info("Admin deleted successfully with ID: %s", pk)
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-class SystemAdminLookupView(generics.ListAPIView):
-    queryset = systemAdmin.objects.all()
-    serializer_class = SystemAdminLookupSerializer
-    pagination_class = None  # Nos aseguramos de que no haya paginación
-
-    # --- LÍNEAS CLAVE PARA LA BÚSQUEDA ---
-    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ['Username']
-
-    # --- NUEVA CONFIGURACIÓN DE ORDENAMIENTO ---
-    ordering_fields = ['idAdmin', 'Username']  # Campos por los que permitimos ordenar
-    ordering = ['idAdmin']  # <-- Ordenamiento por defecto (alfabético)

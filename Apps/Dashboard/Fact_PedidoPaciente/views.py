@@ -5,8 +5,6 @@ from rest_framework import status
 from config.utils.Pagination import PaginationMixin
 from .models import H_PEDIDOS_PACIENTE_DEST
 from .serializers import ReporteUnidades2025Serializer, ReporteCantidadTotal_2025_2024Serializer
-from .serializers import Reporte_CantidadTotal_Meses2025Serializer
-
 from drf_yasg.utils import swagger_auto_schema
 
 from django.shortcuts import get_object_or_404
@@ -100,44 +98,6 @@ class ReporteTotalPedidosPorAnioApiView(APIView):
 
         except Exception as e:
             logger.error(f"Error generando el reporte anual de pedidos: {e}", exc_info=True)
-            return Response(
-                {"error": "Ocurrió un error interno al procesar la solicitud."},
-                status=500
-            )
-
-class Reporte_TotalPedidosMeses2025ApiView(APIView):
-
-    @swagger_auto_schema (responses={200: Reporte_CantidadTotal_Meses2025Serializer(many=True)})
-    def get(self, request):
-        logger.info("Iniciando reporte de total de pedidos por mes del año 2025.")
-
-        try:
-            reporte_data = H_PEDIDOS_PACIENTE_DEST.objects.using('ETL').filter(
-                Result_TiempoKey__Anio=2025
-            ).values(
-                'Result_TiempoKey__NombreMes',
-                'Result_TiempoKey__MesNumero'
-            ).annotate(
-                cantidad_total_mes = Sum('quantity')
-            ).order_by(
-                'Result_TiempoKey__MesNumero'
-            )
-
-            data_list = [
-                {
-                    'mes': item['Result_TiempoKey__NombreMes'],
-                    'Cantidad_TotalPedidos': item['cantidad_total_mes'],
-                    'Anio': 2025
-                }
-                for item in reporte_data
-            ]
-
-            serializer = Reporte_CantidadTotal_Meses2025Serializer(data_list, many=True)
-            logger.info("Reporte generado exitosamente.")
-            return Response(serializer.data)
-
-        except Exception as e:
-            logger.error(f"Error generando el reporte de pedidos por unidad: {e}", exc_info=True)
             return Response(
                 {"error": "Ocurrió un error interno al procesar la solicitud."},
                 status=500
