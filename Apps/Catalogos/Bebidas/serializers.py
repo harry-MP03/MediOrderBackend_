@@ -10,3 +10,7 @@ class BeverageSerializer(ModelSerializer):
         model = beverages
         fields = ['idBeverages', 'NameBeverage', 'Beverage_description', 'Ingredients_Beverage','typeBeveragesFK' ,'nombreTipoBebida']
 
+class BeverageLookupSerializer(ModelSerializer):
+    class Meta:
+        model = beverages
+        fields = ['idBeverages', 'NameBeverage']

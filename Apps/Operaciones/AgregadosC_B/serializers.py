@@ -9,3 +9,8 @@ class AggregatesCbSerializer(ModelSerializer):
     class Meta:
         model = aggregates_cb
         fields = ['idAggregates', 'codeAggregates', 'foodFK', 'comida', 'beverageFK', 'bebida']
+
+class AgreggatesWriteSerializer(ModelSerializer):
+    class Meta:
+        model = aggregates_cb
+        fields = ['idAggregates', 'codeAggregates', 'foodFK', 'beverageFK']

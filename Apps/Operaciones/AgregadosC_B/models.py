@@ -7,8 +7,8 @@ from Apps.Catalogos.Comidas.models import foods
 class aggregates_cb(models.Model):
     idAggregates = models.AutoField(primary_key=True)
     codeAggregates = models.CharField(verbose_name='Código de agregados', max_length=10, unique=True)
-    foodFK = models.ForeignKey(foods, verbose_name='Comida agregada', on_delete=models.PROTECT)
-    beverageFK = models.ForeignKey(beverages, verbose_name='Bebida agregada', on_delete=models.PROTECT)
+    foodFK = models.ForeignKey(foods, verbose_name='Comida agregada', on_delete=models.PROTECT, null=True)
+    beverageFK = models.ForeignKey(beverages, verbose_name='Bebida agregada', on_delete=models.PROTECT, null=True)
 
     class Meta:
         verbose_name_plural= 'Agregados'

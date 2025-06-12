@@ -9,3 +9,8 @@ class ComidasSerializer(ModelSerializer):
     class Meta:
         model = foods
         fields = ['idFood', 'foodName', 'foodDescription', 'Ingredients_food', 'typeFoodFK', 'tipocomida']
+
+class ComidasLookupsSerializer(ModelSerializer):
+    class Meta:
+        model = foods
+        fields = ['idFood', 'foodName']

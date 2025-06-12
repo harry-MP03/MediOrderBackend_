@@ -4,7 +4,7 @@ from rest_framework import status
 
 from config.utils.Pagination import PaginationMixin
 from .models import aggregates_cb
-from .serializers import AggregatesCbSerializer
+from .serializers import AggregatesCbSerializer, AgreggatesWriteSerializer
 from drf_yasg.utils import swagger_auto_schema
 
 from django.shortcuts import get_object_or_404
@@ -41,25 +41,25 @@ class AggregateCBApiView(PaginationMixin, APIView):
         logger.error("Returning all Agreggates without pagination")
         return Response(serializer.data)
 
-
-class AggregatesCB_PPPD_ApiView(PaginationMixin, APIView):
-    # permission_classes = (IsAuthenticated,CustomPermission)
-    model = aggregates_cb
-
-    @swagger_auto_schema(request_body=AggregatesCbSerializer, responses={201: AggregatesCbSerializer(many=True)})
+    @swagger_auto_schema(request_body=AgreggatesWriteSerializer, responses={201: AgreggatesWriteSerializer(many=True)})
     def post(self, request):
         """""
         Ingresar un nuevo Agregados
         """
-        logger.info("POST request to create a new Agreggates")
-        serializer = AggregatesCbSerializer(data=request.data)
+        logger.info("POST request to create a new Aggregates")
+        serializer = AgreggatesWriteSerializer(data=request.data)
 
         if serializer.is_valid():
-            serializer.save()
-            logger.info("Agreggates created successfully")
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        logger.error("Failed to create Agreggates: %s", serializer.errors)
+            nueva_cama = serializer.save()
+            logger.info("Aggregates created successfully")
+            read_serializer = AggregatesCbSerializer(nueva_cama)
+            return Response(read_serializer.data, status=status.HTTP_201_CREATED)
+        logger.error("Failed to create Aggregates: %s", serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class AggregatesCB_PPPD_ApiView(PaginationMixin, APIView):
+    # permission_classes = (IsAuthenticated,CustomPermission)
+    model = aggregates_cb
 
     @swagger_auto_schema(request_body=AggregatesCbSerializer, responses={200: AggregatesCbSerializer(many=True)})
     def put(self, request, pk):

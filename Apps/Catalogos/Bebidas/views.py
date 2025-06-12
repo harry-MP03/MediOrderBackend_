@@ -1,10 +1,11 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import generics, filters
 
 from config.utils.Pagination import PaginationMixin
 from .models import beverages
-from .serializers import BeverageSerializer
+from .serializers import BeverageSerializer, BeverageLookupSerializer
 from drf_yasg.utils import swagger_auto_schema
 
 from django.shortcuts import get_object_or_404
@@ -115,3 +116,16 @@ class bebidas_PPPD_ApiView(APIView):
         logger.info("Beverage deleted successfully with ID: %s", pk)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+class BebidaLookupView(generics.ListAPIView):
+
+    queryset = beverages.objects.all()
+    serializer_class = BeverageLookupSerializer
+    pagination_class = None  # Nos aseguramos de que no haya paginación
+
+    # --- LÍNEAS CLAVE PARA LA BÚSQUEDA ---
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['NameBeverage']
+
+    # --- NUEVA CONFIGURACIÓN DE ORDENAMIENTO ---
+    ordering_fields = ['idBeverages', 'NameBeverage']  # Campos por los que permitimos ordenar
+    ordering = ['idBeverages']  # <-- Ordenamiento por defecto (alfabético)
