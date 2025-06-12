@@ -1,7 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
-from rest_framework import generics, filters
+from rest_framework import status, generics, filters
 
 from config.utils.Pagination import PaginationMixin
 from .models import patient
@@ -12,25 +11,20 @@ from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 
 from ...permissions import CustomPermission
-from config.utils.Pagination import PaginationMixin
 import logging.handlers
-
 from django.db.models import Avg
 
-# Configuracion de el logger
+# Configuracion del logger
 logger = logging.getLogger(__name__)
 
 class PatientApiView(PaginationMixin, APIView):
-
-    #permission_classes = [IsAuthenticated, CustomPermission]
     model = patient
 
     @swagger_auto_schema(responses={200: PatientSerializer(many=True)})
     def get(self, request):
-        """""
+        """
         Obtener todos los pacientes
         """
-
         logger.info("GET request to list all Patients")
         paciente = patient.objects.all().order_by('idpatient')
         page = self.paginate_queryset(paciente, request)
@@ -44,9 +38,9 @@ class PatientApiView(PaginationMixin, APIView):
         logger.error("Returning all patients without pagination")
         return Response(serializer.data)
 
-    @swagger_auto_schema(request_body=PatientSerializer, responses={201: PatientSerializer(many=True)})
+    @swagger_auto_schema(request_body=PatientSerializer, responses={201: PatientSerializer()})
     def post(self, request):
-        """""
+        """
         Ingresar un paciente nuevo
         """
         logger.info("POST request to create a new Patient")
@@ -56,48 +50,56 @@ class PatientApiView(PaginationMixin, APIView):
             serializer.save()
             logger.info("Patient created successfully")
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
         logger.error("Failed to create Patient: %s", serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class Patient_PPPD_ApiView(APIView):
-
-    #permission_classes = (IsAuthenticated,CustomPermission)
     model = patient
-    @swagger_auto_schema(request_body=PatientSerializer, responses={200: PatientSerializer(many=True)})
+
+    @swagger_auto_schema(responses={200: PatientSerializer()})
+    def get(self, request, pk):
+        """
+        Obtener un solo paciente por su ID
+        """
+        logger.info("GET request to retrieve Patient with ID: %s", pk)
+        paciente = get_object_or_404(patient, idpatient=pk)
+        serializer = PatientSerializer(paciente)
+        return Response(serializer.data)
+
+    @swagger_auto_schema(request_body=PatientSerializer, responses={200: PatientSerializer()})
     def put(self, request, pk):
         """
         Actualizar totalmente un paciente especificando su ID
         """
         logger.info("PUT request to update Patient with ID: %s", pk)
         paciente = get_object_or_404(patient, idpatient=pk)
-        if not paciente:
-            return Response({'error': 'Paciente no encontrado'}, status=status.HTTP_404_NOT_FOUND)
 
-        self.check_object_permissions(request, paciente)  # Verificación de permisos
+        self.check_object_permissions(request, paciente)
         serializer = PatientSerializer(paciente, data=request.data)
         if serializer.is_valid():
             serializer.save()
             logger.info("Patient updated successfully with ID: %s", pk)
             return Response(serializer.data)
+
         logger.error("Failed to update Patient with ID: %s. Errors: %s", pk, serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    @swagger_auto_schema(request_body=PatientSerializer, responses={200: PatientSerializer(many=True)})
+    @swagger_auto_schema(request_body=PatientSerializer, responses={200: PatientSerializer()})
     def patch(self, request, pk):
         """
         Actualizar parcialmente un paciente por su ID.
         """
         logger.info("PATCH request to partially update Patient with ID: %s", pk)
         paciente = get_object_or_404(patient, idpatient=pk)
-        if not paciente:
-            return Response({'error': 'Paciente no encontrado'}, status=status.HTTP_404_NOT_FOUND)
 
-        self.check_object_permissions(request, paciente)  # Verificación de permisos
+        self.check_object_permissions(request, paciente)
         serializer = PatientSerializer(paciente, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             logger.info("Patient partially updated successfully with ID: %s", pk)
             return Response(serializer.data)
+
         logger.error("Failed to partially update Patient with ID: %s. Errors: %s", pk, serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -108,26 +110,20 @@ class Patient_PPPD_ApiView(APIView):
         """
         logger.info("DELETE request to delete Patient with ID: %s", pk)
         paciente = get_object_or_404(patient, idpatient=pk)
-        if not paciente:
-            return Response({'error': 'Paciente no encontrado'}, status=status.HTTP_404_NOT_FOUND)
 
-        self.check_object_permissions(request, paciente)  # Verificación de permisos
+        self.check_object_permissions(request, paciente)
         paciente.delete()
         logger.info("Patient deleted successfully with ID: %s", pk)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-#Se lista los pacientes en orden por edad de mayor a menor en descenso
 class Paciente_Edad_DescensoApiView(PaginationMixin, APIView):
-
-    #permission_classes = [IsAuthenticated, CustomPermission]
     model = patient
 
     @swagger_auto_schema(responses={200: PatientSerializer(many=True)})
     def get(self, request):
-        """""
+        """
         Obtener todos los pacientes con la edad de mayor a menor
         """
-
         logger.info("GET request to list all Patients")
         Edad_Descenso = patient.objects.all().order_by('-agePatient')
         page = self.paginate_queryset(Edad_Descenso, request)
@@ -141,10 +137,7 @@ class Paciente_Edad_DescensoApiView(PaginationMixin, APIView):
         logger.error("Returning all patients without pagination")
         return Response(serializer.data)
 
-#Sacar el promedio de edad de los pacientes registrados
 class EdadPromedio_PatientsAPIview(PaginationMixin, APIView):
-
-    #permission_classes = [IsAuthenticated, CustomPermission]
     model = patient
 
     @swagger_auto_schema(responses={200: PatientSerializer(many=True)})
@@ -152,20 +145,17 @@ class EdadPromedio_PatientsAPIview(PaginationMixin, APIView):
         """
         Obtener el promedio de edad de los pacientes.
         """
-
         logger.info("GET request to Age average")
         edad_Promedio = patient.objects.all().aggregate(Avg('agePatient'))['agePatient__avg']
 
         if edad_Promedio is None:
             edad_Promedio = 0
         else:
-            edad_Promedio = round(edad_Promedio) #Se redondea la edad del paciente para evitar un resultado en decimal
+            edad_Promedio = round(edad_Promedio)
 
         return Response({'edad_Promedio': edad_Promedio})
 
-#Contar los pacientes registrados
 class PatientsCountAPIview(PaginationMixin, APIView):
-   # permission_classes = [IsAuthenticated, CustomPermission]
     model = patient
 
     @swagger_auto_schema(responses={200: PatientSerializer(many=True)})
@@ -173,7 +163,6 @@ class PatientsCountAPIview(PaginationMixin, APIView):
         """
         Contar los pacientes registrados
         """
-
         logger.info("GET request to Patient Count")
         CantidadTotal = patient.objects.count()
         return Response({'CantidadTotal': CantidadTotal})
@@ -181,12 +170,9 @@ class PatientsCountAPIview(PaginationMixin, APIView):
 class PacienteLookupsApiView(generics.ListAPIView):
     queryset = patient.objects.all()
     serializer_class = PacientesLookupsSerializers
-    pagination_class = None  # Nos aseguramos de que no haya paginación
+    pagination_class = None
 
-    # --- LÍNEAS CLAVE PARA LA BÚSQUEDA ---
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['cedulaPatient']
-
-    # --- NUEVA CONFIGURACIÓN DE ORDENAMIENTO ---
-    ordering_fields = ['idpatient', 'cedulaPatient']  # Campos por los que permitimos ordenar
-    ordering = ['cedulaPatient']  # <-- Ordenamiento por defecto (alfabético)
+    ordering_fields = ['idpatient', 'cedulaPatient']
+    ordering = ['cedulaPatient']

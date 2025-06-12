@@ -50,6 +50,7 @@ class CamasApiView(PaginationMixin, APIView):
         Ingresar una nueva Cama
         """
         logger.info("POST request to create a new Bed")
+        print(">>> DATOS RECIBIDOS EN EL POST:", request.data)
         serializer = BedWriteSerializer(data=request.data)
 
         if serializer.is_valid():

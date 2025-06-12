@@ -22,3 +22,12 @@ class PacienteActivoSerializer(ModelSerializer):
     class Meta:
         model = medical_History
         fields = ['paciente', 'active_Patient']
+
+class HistorialMedico7rows(ModelSerializer):
+    expediente_code = CharField(source='expedientP_FK.codeExpedient', read_only=True, label="Código de expediente")
+    codigo_cama = CharField(source= 'bedFK.bedCode', read_only=True, label="Código de cama")
+    codigo_Pedido = CharField(source='orderFk.codeOrder', read_only=True, label="Código de pedido")
+
+    class Meta:
+        model = medical_History
+        fields = ['idMedicalHistory', 'codeHistory', 'dateHistory', 'codigo_cama', 'expediente_code', 'codigo_Pedido', 'active_Patient']

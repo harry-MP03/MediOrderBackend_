@@ -11,7 +11,7 @@ from Apps.Catalogos.Camas.models import beds
 from drf_yasg.utils import swagger_auto_schema
 
 #Serializer de Historial Médico y Camas
-from .serializers import MedicalHistorySerializer, PacienteActivoSerializer
+from .serializers import MedicalHistorySerializer, PacienteActivoSerializer, HistorialMedico7rows
 from Apps.Catalogos.Camas.serializers import BedSerializer
 
 from django.shortcuts import get_object_or_404
@@ -262,5 +262,28 @@ class PatientActiveApiView(PaginationMixin, APIView):
             return self.get_paginated_response(serializer.data)
 
         serializer = PacienteActivoSerializer(pacientes_activos, many=True)
+        logger.error("Returning all Medical History without pagination")
+        return Response(serializer.data)
+
+class MedicalHistory7rowsApiView(PaginationMixin, APIView):
+    # permission_classes = [IsAuthenticated, CustomPermission]
+    model = medical_History
+
+    @swagger_auto_schema(responses={200: HistorialMedico7rows(many=True)})
+    def get(self, request):
+        """""
+        Obtener todas los Historiales Médicos
+        """
+
+        logger.info("GET request to list all Medical History")
+        historialMedico = medical_History.objects.all().order_by('idMedicalHistory')
+        page = self.paginate_queryset(historialMedico, request)
+
+        if page is not None:
+            serializer = HistorialMedico7rows(page, many=True)
+            logger.info("Paginated response for Medical History")
+            return self.get_paginated_response(serializer.data)
+
+        serializer = HistorialMedico7rows(historialMedico, many=True)
         logger.error("Returning all Medical History without pagination")
         return Response(serializer.data)
