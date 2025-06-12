@@ -10,3 +10,8 @@ class PedidoPacienteSerializer(ModelSerializer):
         model = orderpatient
         fields = ['idOrder', 'codeOrder', 'adminFK', 'userNameAdmin', 'aggregatesFK', 'codigoAgregados'
                 ,'orderStatus', 'quantity', 'dateOrder']
+
+class PedidoPacienteWriteSerializer(ModelSerializer):
+    class Meta:
+        model = orderpatient
+        fields = ['idOrder', 'adminFK', 'aggregatesFK', 'orderStatus', 'quantity', 'dateOrder']

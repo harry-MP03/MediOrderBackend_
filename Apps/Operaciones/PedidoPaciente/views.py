@@ -4,7 +4,7 @@ from rest_framework import status
 
 from config.utils.Pagination import PaginationMixin
 from .models import orderpatient
-from .serializers import PedidoPacienteSerializer
+from .serializers import PedidoPacienteSerializer, PedidoPacienteWriteSerializer
 from drf_yasg.utils import swagger_auto_schema
 
 from django.shortcuts import get_object_or_404
@@ -41,25 +41,25 @@ class PedidoPacienteApiView(PaginationMixin, APIView):
         logger.error("Returning all Order without pagination")
         return Response(serializer.data)
 
-
-class PedidoPaciente_PPPD_ApiView(PaginationMixin, APIView):
-    # permission_classes = (IsAuthenticated,CustomPermission)
-    model = orderpatient
-
-    @swagger_auto_schema(request_body=PedidoPacienteSerializer, responses={201: PedidoPacienteSerializer(many=True)})
+    @swagger_auto_schema(request_body=PedidoPacienteWriteSerializer, responses={201: PedidoPacienteWriteSerializer(many=True)})
     def post(self, request):
         """""
         Ingresar un nuevo Pedido
         """
         logger.info("POST request to create a new Order")
-        serializer = PedidoPacienteSerializer(data=request.data)
+        serializer = PedidoPacienteWriteSerializer(data=request.data)
 
         if serializer.is_valid():
-            serializer.save()
+            nueva_pedido = serializer.save()
             logger.info("Order created successfully")
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            read_serializer = PedidoPacienteSerializer(nueva_pedido)
+            return Response(read_serializer.data, status=status.HTTP_201_CREATED)
         logger.error("Failed to create Order: %s", serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class PedidoPaciente_PPPD_ApiView(PaginationMixin, APIView):
+    # permission_classes = (IsAuthenticated,CustomPermission)
+    model = orderpatient
 
     @swagger_auto_schema(request_body=PedidoPacienteSerializer, responses={200: PedidoPacienteSerializer(many=True)})
     def put(self, request, pk):
